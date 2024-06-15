@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 class Document(BaseModel):
     document_id: UUID
+    document_name: str
     text: str
 
 
@@ -17,11 +18,6 @@ class DocumentsInput(BaseModel):
 class DocumentInput(BaseModel):
     vault_id: UUID
     document: Document
-
-
-class DocumentRelations(BaseModel):
-    document_id: UUID
-    relations: List
 
 
 class DeleteDocumentInput(BaseModel):
