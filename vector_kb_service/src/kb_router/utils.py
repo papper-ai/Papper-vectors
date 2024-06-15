@@ -15,7 +15,6 @@ from kb_router.schemas import (
     DeleteDocumentInput,
     Document,
     DocumentInput,
-    DocumentRelations,
     DocumentsInput, PreparedToUpsertDocuments,
 )
 
@@ -36,22 +35,6 @@ async def create_embeddings(texts: List[str] | str) -> List[List[float]]:
 async def fill_new_kb(vault_id: UUID, prepared_docs: PreparedToUpsertDocuments) -> None:
     await create_collection(vault_id)
     await upsert_document(vault_id, prepared_docs)
-#
-#
-# async def add_to_kb(vault_id: UUID, vault_relations: List[DocumentRelations]) -> None:
-#     kb = KB()
-#
-#     for document_relations in vault_relations:
-#         document_id = document_relations.document_id
-#         for relation in document_relations.relations:
-#             await kb.add_relation(relation, document_id)
-#
-#     # Filter and clean the data
-#     await kb.filter_relations()
-#
-#     cypher_statements = await kb.generate_cypher_statements()
-#
-#     await execute_cyphers(vault_id, cypher_statements)
 
 
 async def request_relation_extraction(
@@ -60,11 +43,11 @@ async def request_relation_extraction(
     start_time = time.perf_counter()
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    docs = (splitter.create_documents([document.text], metadatas=[{"document_id": document.document_id}]) for document
-            in documents)
+    docs = (splitter.create_documents([document.text],
+                                      metadatas=[{"document_id": document.document_id,
+                                                  "document_name:": document.document_name}]) for document in documents)
 
     flat_docs_list = [item for sublist in docs for item in sublist]
-
     prepared_docs = {"ids": [], 'payloads': [], 'vectors': []}
 
     result = await create_embeddings(list(map(lambda x: x.page_content, flat_docs_list)))
