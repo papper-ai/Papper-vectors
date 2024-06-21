@@ -10,7 +10,7 @@ services:
     networks:
       - papper-vaults-service-network
   papper-vector-kb-service:
-    container_name: vector_kb_service
+    container_name: papper-vector-kb-service
     build: vector_kb_service
     restart: unless-stopped
     volumes:
@@ -24,7 +24,7 @@ services:
     networks:
       - papper-vaults-service-network
   papper-vector-rag-service:
-    build: vector_rag_service
+    build: papper-vector-rag-service
     container_name: vector_rag_service
     restart: unless-stopped
     env_file:
