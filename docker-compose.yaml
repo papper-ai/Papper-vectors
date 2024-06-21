@@ -8,8 +8,9 @@ services:
     volumes:
       - ./qdrant_storage:/qdrant/storage
     networks:
-      - vaults_services_network
-  vector_kb_service:
+      - papper-vaults-service-network
+  papper-vector-kb-service:
+    container_name: vector_kb_service
     build: vector_kb_service
     restart: unless-stopped
     volumes:
@@ -21,8 +22,8 @@ services:
     command: >
       sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-config /usr/src/vector_kb_service/uvicorn_logging.conf"
     networks:
-      - vaults_services_network
-  vector_rag_service:
+      - papper-vaults-service-network
+  papper-vector-rag-service:
     build: vector_rag_service
     restart: unless-stopped
     env_file:
@@ -34,18 +35,18 @@ services:
     command: >
       sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-config /usr/src/vector_rag_service/uvicorn_logging.conf"
     networks:
-      - vector_rag_service_network
-      - vaults_services_network
+      - papper-vector-rag-service-network
+      - papper-vaults-service-network
       - papper-backend
 
 volumes:
   qdrant_storage:
 
 networks:
-  vaults_services_network:
-    name: vaults_services_network
-  vector_rag_service_network:
-    name: vector_rag_service_network
+  papper-vaults-service-network:
+    name: papper-vaults-service-network
+  papper-vector-rag-service-network:
+    name: papper-vector-rag-service-network
   papper-backend:
     name: papper-backend
     external: true
