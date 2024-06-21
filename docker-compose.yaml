@@ -25,6 +25,7 @@ services:
       - papper-vaults-service-network
   papper-vector-rag-service:
     build: vector_rag_service
+    container_name: vector_rag_service
     restart: unless-stopped
     env_file:
       ./vector_rag_service/.env
