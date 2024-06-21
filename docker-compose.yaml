@@ -46,6 +46,7 @@ volumes:
 networks:
   papper-vaults-service-network:
     name: papper-vaults-service-network
+    external: true
   papper-vector-rag-service-network:
     name: papper-vector-rag-service-network
   papper-backend:
