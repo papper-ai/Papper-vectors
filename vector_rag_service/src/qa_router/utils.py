@@ -16,7 +16,7 @@ async def generate_answer(input: Input):
                                                       messages_history=input.history)
         return Answer(content=answer, traceback=result.search_result)
 
-    answer = await create_base_completion(input.history + [{"user": input.query}])
+    answer = await create_base_completion(input.history + [{"role": "user", "content": input.query}])
     return Answer(content=answer, traceback=[])
 
 
