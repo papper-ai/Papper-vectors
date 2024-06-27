@@ -45,7 +45,7 @@ async def request_relation_extraction(
     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     docs = (splitter.create_documents([document.text],
                                       metadatas=[{"document_id": document.document_id,
-                                                  "document_name:": document.document_name}]) for document in documents)
+                                                  "document_name": document.document_name}]) for document in documents)
 
     flat_docs_list = [item for sublist in docs for item in sublist]
     prepared_docs = {"ids": [], 'payloads': [], 'vectors': []}
