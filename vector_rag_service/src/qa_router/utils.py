@@ -13,7 +13,7 @@ async def generate_answer(input: Input):
     if await use_documents_db_thought(messages_history=input.history, query=input.query):
         logging.info("Using documents db")
         embedding = await create_embedding(input.query)
-        result = await search_relevant_chunks(vault_id=input.vault_id, vector=embedding, top_k=4, score_threshold=0.2)
+        result = await search_relevant_chunks(vault_id=input.vault_id, vector=embedding, top_k=4)
         answer = await create_completion_with_context(query=input.query, context=result.text,
                                                       messages_history=input.history)
         return Answer(content=answer, traceback=result.search_result)
