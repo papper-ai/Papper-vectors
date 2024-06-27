@@ -32,6 +32,7 @@ async def create_completion_with_context(context: Any, query: str, messages_hist
     messages = [{"role": "system", "content": SYSTEM_PROMPT_QA}] + \
                messages_history + \
                [{"role": "user", "content": USER_PROMPT_QA.format(query=query, context=context)}]
+    logging.info(f"Messages: {messages}")
     answer = await create_base_completion(messages)
     return answer
 
