@@ -53,7 +53,7 @@ async def create_base_completion(messages: list) -> str:
                                                                     max_tokens=1024,
                                                                     timeout=60*5,
                                                                     extra_body={"stop_token_ids": [128009]},)
-    answer = response.choices[0].text
+    answer = response.choices[0].message.content
 
     if "<|eot_id|>" in answer:
         answer.replace('<|eot_id|>', '')
