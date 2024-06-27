@@ -29,8 +29,9 @@ async def create_embedding(query: str) -> List[float]:
 
 
 async def create_completion_with_context(context: Any, query: str, messages_history: list) -> str:
-    messages = [{"system": SYSTEM_PROMPT_QA}] + messages_history + [{"user": USER_PROMPT_QA.format(query=query,
-                                                                                                   context=context)}]
+    messages = [{"role": "system", "content": SYSTEM_PROMPT_QA}] + \
+               messages_history + \
+               [{"role": "user", "content": USER_PROMPT_QA.format(query=query, context=context)}]
     answer = await create_base_completion(messages)
     return answer
 
