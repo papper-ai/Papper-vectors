@@ -47,10 +47,12 @@ async def use_documents_db_thought(messages_history: list, query: str) -> bool:
 
 async def create_base_completion(messages: list) -> str:
     settings.openai_client.base_url = settings.URL_TO_LLM
-    response = await settings.openai_client.chat.completions.create(model="lightblue/suzume-llama-3-8B-multilingual",
+    response = await settings.openai_client.chat.completions.create(model="suzume-llama-3-8B-multilingual-gptq-8bit",
                                                                     messages=messages,
                                                                     temperature=0.0,
-                                                                    max_tokens=1024)
+                                                                    max_tokens=1024,
+                                                                    timeout=60*5,
+                                                                    extra_body={"stop_token_ids": [128009]},)
     answer = response.choices[0].text
 
     if "<|eot_id|>" in answer:
