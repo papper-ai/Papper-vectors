@@ -12,7 +12,8 @@ async def generate_answer(input: Input):
     if await use_documents_db_thought(messages_history=input.history, query=input.query):
         embedding = await create_embedding(input.query)
         result = await search_relevant_chunks(vault_id=input.vault_id, vector=embedding, top_k=4, score_threshold=0.2)
-        answer = await create_completion_with_context(query=input.query, context=result.text, messages_history=input.history)
+        answer = await create_completion_with_context(query=input.query, context=result.text,
+                                                      messages_history=input.history)
         return Answer(content=answer, traceback=result.search_result)
 
     answer = await create_base_completion(input.history + [{"user": input.query}])
@@ -33,7 +34,9 @@ async def create_completion_with_context(context: Any, query: str, messages_hist
 
 
 async def use_documents_db_thought(messages_history: list, query: str) -> bool:
-    messages = [{"system": SYSTEM_PROMPT_THOUGH}] + messages_history + [{"user": USER_PROMPT_THOUGH.format(query=query)}]
+    messages = [{"role": "system", "content": SYSTEM_PROMPT_THOUGH}] + \
+               messages_history + \
+               [{"role": "user", "content": USER_PROMPT_THOUGH.format(query=query)}]
     answer = await create_base_completion(messages)
 
     if "0" in answer:
