@@ -1,3 +1,4 @@
+import logging
 from typing import List, NamedTuple
 
 from database.qdrant import client as qdrant_store
@@ -13,6 +14,7 @@ async def search_relevant_chunks(vault_id: str, vector: list[float], top_k: int)
                                          limit=top_k)
 
     result_text = '\n\n'.join(list(map(lambda x: x.payload['page_content'], response)))
+    logging.info(f"Result text: {result_text}")
     search_result = [SearchResult(document_id=x.payload['document_id'],
                                   information=x.payload['page_content'],
                                   document_name=x.payload.get('document_name', "no_name_found")) for x in response]
