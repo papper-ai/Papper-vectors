@@ -1,3 +1,4 @@
+import logging
 from typing import List, Any
 
 from qa_router.prompts import USER_PROMPT_QA, SYSTEM_PROMPT_THOUGH, USER_PROMPT_THOUGH, SYSTEM_PROMPT_QA
@@ -10,6 +11,7 @@ from qa_router.schemas import Answer
 
 async def generate_answer(input: Input):
     if await use_documents_db_thought(messages_history=input.history, query=input.query):
+        logging.info("Using documents db")
         embedding = await create_embedding(input.query)
         result = await search_relevant_chunks(vault_id=input.vault_id, vector=embedding, top_k=4, score_threshold=0.2)
         answer = await create_completion_with_context(query=input.query, context=result.text,
@@ -38,6 +40,7 @@ async def use_documents_db_thought(messages_history: list, query: str) -> bool:
                messages_history + \
                [{"role": "user", "content": USER_PROMPT_THOUGH.format(query=query)}]
     answer = await create_base_completion(messages)
+    logging.info(f"Thought answer: {answer}")
 
     if "0" in answer:
         return False

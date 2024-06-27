@@ -2,8 +2,14 @@ from pathlib import Path
 
 from openai import AsyncClient
 from pydantic_settings import BaseSettings
+import logging
 
 BASE_DIR = Path(__file__).parent
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
 
 
 class Settings(BaseSettings):
