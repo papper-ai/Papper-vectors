@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+import openai
+from fastapi import APIRouter, HTTPException
 from starlette import status
 
 from qa_router.utils import generate_answer
@@ -9,4 +10,7 @@ router = APIRouter(tags=["QA"])
 
 @router.post("/answer", status_code=status.HTTP_200_OK, response_model=Answer)
 async def answer(input: Input):
-    return await generate_answer(input)
+    try:
+        return await generate_answer(input)
+    except openai.APIStatusError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.response.text)
